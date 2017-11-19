@@ -1,0 +1,433 @@
+Xwrits NEWS
+
+Version 2.26   3.Apr.2009
+
+* Correct handling of idle-time freedesktop.org ping messages, to avoid
+  window managers thinking xwrits has died.
+
+* Some internal refactoring.
+
+
+Version 2.25   10.Jul.2006
+
+* Change behavior of '+idle=TIME' when a warning window pops up.  Requested
+  by Bernhard Reiter.
+
+
+Version 2.24   9.Jul.2006
+
+* Xwrits hand windows appear on all desktops, even after the first break.
+  The freedesktop.org standard requires you tell the window manager about
+  the all-desktops property *every time* the window reappears.  Thanks to
+  Zach Beane for a patch that inspired this search.  Previously reported by
+  Stephen A. Lawrence and Andy Feery.
+
+* Support MWM hints on 64-bit platforms.  Bug report and initial patches
+  from Jeff Layton.
+
+* Avoid infinite error recursion when windows are closed on +multiscreen.
+  Bug reported in April 2004 by Chris Jones.
+
+
+Version 2.23   21.Jun.2006
+
+* Support '+once[=COUNT]' option.  Patch by Anne Elizabeth Dudfield the
+  Rad.
+
+
+Version 2.22   2.Apr.2005
+
+* Support `+finger=GIFFILE'. Requested by Urko Lusa.  This change was made
+  in August 2002, but for some reason never released.
+
+
+Version 2.21   6.May.2002
+
+* Add support for Xinerama. Requested by Orion Hodson <hodson@icir.org>.
+
+
+Version 2.20   17.Apr.2002
+
+* Add `title' option. Suggested, and patch provided, by Dale Thatcher
+  <xwrits@dalethatcher.com>.
+
+* Finally fix `--multiscreen' option. Thanks to Orion Hodson
+  <hodson@icir.org> for lending his multihead machine.
+
+
+Version 2.19   8.Feb.2002
+
+* The escalation "clock" corresponding to `after=TIME' options proceeds
+  even after you cancel a break by deleting all the xwrits windows.
+  Therefore, you can no longer prevent escalation by deleting xwrits
+  windows with your window manager.
+
+* Locking code works with large `lock-picture's. Reported by Carlos
+  O'Donell Jr. <carlos@baldric.uwo.ca>.
+
+* Add `bars-picture' option. If you specify your own `lock-picture', then
+  `bars-picture' defaults to a black screen. Say `bars-picture="&bars"' to
+  get the old behavior.
+
+* Add `+verbose' option for debugging.
+
+* Xwrits checks whether other clients pay attention to KeyRelease events,
+  as well as KeyPress events. This may improve its interaction with certain
+  window managers. For example, xwrits seemed to come up less frequently
+  than it should when I was using KDE.
+
+* `--multiscreen' still doesn't seem to work, but I don't know why.
+
+
+Version 2.18   21.Dec.2001
+
+* Fix `--multiscreen' option. Reported by Jamie Zawinski <jwz@jwz.org>.
+
+
+Version 2.17   18.Dec.2001
+
+* Add `--multiscreen' option. Requested by Jamie Zawinski <jwz@jwz.org>.
+
+
+Version 2.16   23.Aug.2001
+
+* Choose font more carefully, to avoid null pointer dereferences. Problem
+  reported by Sharif Nassar <sharif@mrwacky.com>.
+
+
+Version 2.15   18.Apr.2001
+
+* Xwrits processes play nicely with one another. For example, two xwrits
+  processes with `+top' no longer fight each other to get to the top of the
+  window stack; and xwrits processes inform one another when you click on a
+  window to take a break. Requested by Thomer M. Gil
+  <thomergil@hotmail.com>, who runs two xwrits processes at once: one for
+  microbreaks, one for longer breaks.
+
+
+Version 2.14   15.Feb.2001
+
+* Fixed new crash when `+lock' and `+breakclock' were both supplied.
+  Reported by Chris Keane <chris@chris-keane.co.uk>.
+
+* Fixed time-adjusting code when the system clock jumps backwards: Do not
+  use the remaining-timeout value to calculate how much the system clock
+  has changed. The symptom was that xwrits windows would stop animating if
+  the system clock jumped backwards (even by a little bit).
+
+
+Version 2.13   11.Feb.2001
+
+* Documented multiple `breaktime' specifications. This lets you, for
+  example, make a break longer depending on how long you waited to take it.
+  See the ESCALATION section of the manual page. These were added in an
+  earlier version, but never documented.
+
+* The escalation "clock" corresponding to `after=TIME' options proceeds
+  even while xwrits thinks you're resting. Therefore, you can no longer
+  prevent escalation by clicking on the xwrits window (making it think
+  you're resting) and then typing some more. Requested by Conrad Hughes
+  <conrad@eireann.org>.
+
+* Bug fix: The `breakclock' always counts down from the end of the break.
+  Previously, it counted back from a random time when `+mouse' was true.
+  Reported by Tijn Porcelijn <taine@3niat.myweb.nl>.
+
+* Hopefully fixed bugs that were causing xwrits to crash on Chris Keane
+  <chris@chris-keane.co.uk>.
+
+* Bug fix: Erasing messages on the lock screen didn't completely work if
+  the hand picture was in the way. This resulted in unreadable displays.
+  Fixed.
+
+* Hopefully fixed bugs that caused animation to stop sometimes.
+
+* The lock screen now shows how many characters of your unlock password
+  you've typed.
+
+
+Version 2.12   14.Nov.2000
+
+* Changed Alarm structure into a doubly linked list. May improve
+  performance when there are many xwrits windows.
+
+
+Version 2.11   29.Jan.2000
+
+* Fixed bug: destroying xwrits windows with the window manager could
+  corrupt memory and eventually cause a crash. Reported by Anders
+  Melchiorsen <and@kampsax.dtu.dk>.
+
+
+Version 2.10   5.Jan.2000
+
+* Xwrits can simultaneously monitor multiple displays (and report problems
+  on all of them). Just give the `display' option multiple times.
+
+* Added `lock-picture' option.
+
+* Fixed bug: default `canceltime' could be longer than `typetime'.
+
+* Fixed bug: sometimes the warning window picture would stop being
+  animated.
+
+
+Version 2.9   30.Dec.1999
+
+* `german' is now its own beast: an animated gesture suggested by Andreas
+  Stenger <Andreas.Stenger@smallworld.de>.
+
+* When `+quota' is on and you take a quota break, xwrits lengthens your
+  typing time by that amount, as well as shortening your break time by that
+  amount. Now a break cycle -- the time from when one break is over, until
+  when the next break is over -- is the same length of time (typetime plus
+  breaktime) whether or not `+quota' is in use. Suggested by Justin Wells
+  <justin@fever.semiotek.com>.
+
+* Added `minbreaktime' for use with `+quota'. It defaults to half the break
+  length or the quota time, whichever is longer. Suggested by Justin Wells
+  <justin@fever.semiotek.com>.
+
+* Added `canceltime' option. This is the amount of time that you are
+  allowed to type if you cancel a break (by deleting all xwrits windows
+  with the window manager). Suggested, again, by Justin Wells
+  <justin@fever.semiotek.com>.
+
+* Made GIF records read-only. This should result in slightly better memory
+  performance in all cases, and especially for people running more than one
+  xwrits at once.
+
+
+Version 2.9b1   10.Aug.1999
+
+* Added `+quota' option. With `+quota=TIME' on, if you leave your
+  workstation idle for more than TIME, xwrits will subtract that idle time
+  from the length of the next break. Requested by Justin Wells
+  <justin@fever.semiotek.com>.
+
+* Xwrits always monitors your key presses, even with `-idle'. Sort of
+  requested by Malcolm Ross Kinsella Ryan <malcolmr@cse.unsw.edu.au>.
+
+* Changed semantics of `+idle=IDLETIME'. Now the IDLETIME argument is the
+  amount of time that must pass before an idle period is treated like a
+  break. Something like this was requested by Peter Boult
+  <pjb@sagres.com.au>.
+
+* Pressing the mouse button on an xwrits window counts as a key press.
+
+* Thickened index finger on `+finger=korean' picture.
+
+* Added `german', `japanese', and `russian' as synonyms for
+  `+finger=korean'.
+
+
+Version 2.8   9.Aug.1999
+
+* Added the `+cheat' option to allow limited cheating during a break.
+
+* Extended `+finger' to `+finger=CULTURE', and included a rude Korean
+  gesture (`+finger=korean').
+
+* You can set the mouse motion detector's sensitivity with
+  `+mouse[=SENSITIVITY]'. Default sensitivity has been raised to 15 pixels.
+  Requested by Radoslaw Stachowiak <radek.stachowiak@alter.pl>.
+
+* Changed the way times are parsed for consistency. Now a fractional number
+  like `2.5' means 2.5 minutes, not 2.5 seconds. You can still get 2.5
+  seconds with `:2.5'. A clarification of the time situation was originally
+  requested by Sam Ockman <ockman@cs.stanford.edu>.
+
+* Fixed bugs in `+multiply': iconifying a multiplied warning window would
+  cause a crash, and new warning windows wouldn't have clocks attached.
+
+* Fixed bugs in picture loading code: multiple `flashtime' options had no
+  effect since 2.8b1.
+
+
+Version 2.8b2   4.Aug.1999
+
+* Xwrits can finally monitor your mouse movements with the `+mouse' option.
+  I've been meaning to implement this feature for years. It has been
+  requested by Radoslaw Stachowiak <radek.stachowiak@alter.pl>, Justin
+  Wells <justin@fever.semiotek.com>, Chris Brand
+  <chris_brand@raytheon.com>, Mark Lewis <mlewis@cgrg.ohio-state.edu>, Alex
+  Westner <westner@media.mit.edu>, Peter Boult <pjb@sagres.com.au>, Malcolm
+  Ross Kinsella Ryan <malcolmr@cse.unsw.edu.au>, Sam Ockman
+  <ockman@cs.stanford.edu>, and possibly others.
+
+* You can specify your own GIF pictures or animations for the warning,
+  resting, and ready windows with the `--warning-picture',
+  `--rest-picture', and `--ready-picture' options. I've been meaning to
+  implement this feature for a while, too. Tom Murphy
+  <murphy@quixote.engr.sgi.com> also requested it.
+
+* Various code cleanups and some bug fixes.
+
+
+Version 2.8b1   3.Aug.1999
+
+* Fixed bugs related to the count of how many hands were actively visible.
+  This surfaced in several ways: too few multiplied windows, deleting
+  xwrits windows could cause a segmentation fault, and so forth. Bug
+  reported by Darko Marinov <marinov@lcs.mit.edu>.
+
+* Different `+top' behavior: now warning windows look at the window
+  stacking order and try to keep themselves on top.
+
+* Simplified clock drawing mechanism.
+
+* Updated GIF library to 0.9999.
+
+
+Version 2.7.3   28.Dec.1998
+
+* Updated GIF library to 0.99; moved to config.h-based configuration.
+
+* Use the failing-malloc library to avoid problems with some systems' bad
+  realloc() definitions.
+
+
+Version 2.7.2   16.Dec.1998
+
+* Another bug fix in code for adjusting break length (sometimes it wouldn't
+  notice that a break should be over, and would incorrectly start
+  flashing when you typed).
+
+* Finally, real `--help'!
+
+
+Version 2.7.1   9.Dec.1998
+
+* Fixed bug where breaks would often be dramatically shortened for no good
+  reason. (The problem: there were several static variables named
+  last_key_time, instead of one global variable.)
+
+
+Version 2.7   7.Dec.1998
+
+* Xwrits will adjust the length it wants you to rest depending on how long
+  it's been since you last typed. Bug reported by A.T. Hofkamp
+  <a.hofkamp@wtb.tue.nl>.
+
+* Xwrits now behaves robustly when the system time is adjusted backwards.
+
+* The xwrits package now uses automake.
+
+
+Version 2.6.5   6.Oct.1998
+
+* Makefiles: Fixed vpath builds and problems with old `make's (makes which
+  didn't support $< in explicit rules).
+
+
+Version 2.6.4   26.Sep.1998
+
+* Added `--help' (well, `help') to conform to GNU program behavior standards.
+
+* Makefiles: Added `make uninstall' target, enabled `./configure's
+  program name transformations, made VPATH builds possible.
+
+
+Version 2.6.3   7.Sep.1998
+
+* No user-visible changes (fixed configuration bugs and renamed some
+  variables).
+
+
+Version 2.6.2   17.Aug.1998
+
+* Bug fix: If `idle' was off, the warning window would never appear (it was
+  waiting for a key press -- stupid, since it wasn't listening for any key
+  presses). Bug reported by Malcolm Ross Kinsella Ryan
+  <malcolmr@cse.unsw.edu.au>.
+
+
+Version 2.6.1   8.Jun.1998
+
+* Fixed the clock, which will now disappear properly instead of leaving a
+  black square (even in mono).
+
+
+Version 2.6   29.May.1998
+
+* Made and included pictures for monochromatic screens and added `mono'
+  option.
+
+* Bug fixes for `lock', `clock' and `breakclock'.
+
+* Restored the time argument to `idle'.
+
+
+Version 2.6b8   27.May.1998
+
+* Added support for --long-options and --version.
+
+* Fixed race condition in schedule.c, which could result in losing
+  keystrokes. Bug reported by Gregory Galperin <grg@ai.mit.edu>.
+
+
+Version 2.6b7   23.May.1998
+
+* Clock improvements: fixed problem with black-on-black clock on 24-plane
+  displays (it had to do with visual selection: WhitePixel wasn't white
+  since the Visual was not the default). Also improved clock appearance and
+  made it appear more like when it's supposed to. Bug reported by Erez
+  Zadok <ezk@cs.columbia.edu>.
+
+
+Version 2.6b6   5.May.1998
+
+* Improved the configure script to use <sys/types.h> for u_int32_t, etc.
+  when possible.
+
+* Fixed bug in gifx.c: on a 24-plane display, any picture came out all
+  black. (The problem: implementation-specific behavior of <<;
+  specifically, I expected 1<<32 == 0 for 32-bit ints.) Bug reported by
+  Alexander Konstantinou <akonstan@cs.columbia.edu> and Matthew Lewis
+  <mlewis@cgrg.ohio-state.edu>.
+
+* Added visual searching: xwrits will now use a TrueColor visual if
+  available.
+
+
+Version 2.6b4   5.May.1998
+
+* Updated GIF library to 0.9, the version used in Gifsicle. This has
+  temporarily broken support for monochrome displays, but will hopefully
+  fix other bugs some people have experienced.
+
+
+Version 2.6b3   24.Nov.1997
+
+* Fixed installation and improved the configure script.
+
+
+Version 2.6b2
+
+* Fixed bug with freeing memory multiple times. Works better on Linux now.
+  Thanks to Albert L. Ting <alt@artisan.com> for a patch.
+
+
+Version 2.5   13.Nov.1995
+
+* The most important change is the +idle option, on by default, which makes
+  xwrits slightly smarter than an alarm clock. The code has also been
+  completely reorganized around the Alarm concept, which makes it much
+  cleaner.
+
+
+Version 2
+
+* Many, many more options have been added. The code has been cleaned up a
+  great deal, and also expanded a great deal. Comments should still be
+  added to the code.
+
+* Xwrits no longer uses XPM files. Instead, it uses GIF files, with some
+  proprietary extensions. The GIF files are compiled into C files, then
+  object files, and read from memory. This makes xwrits a much, much
+  smaller executable, faster, and more portable.
+
+
+Version 1   Summer 1994
+
+* Original distribution.

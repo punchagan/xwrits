@@ -1,0 +1,346 @@
+.\" -*- mode: nroff -*-
+.ds V 2.26
+.ds E " \-\- 
+.if t .ds E \(em
+'
+.TH XWRITS 1 "8 Feb 2002" "Version \*V"
+.SH NAME
+xwrits \- reminds you to take wrist breaks
+.SH SYNOPSIS
+.B xwrits
+\%[\-display \fIdisplay\fP]
+\%[typetime=\fItime\fP]
+\%[breaktime=\fItime\fP]
+\%[other options]
+.SH DESCRIPTION
+\fBXwrits\fP reminds you to take wrist breaks for prevention or management
+of repetitive stress injuries. When you should take a break, it pops up an
+X window, the warning window. You click on the warning window, then take a
+break. The window changes appearance while you take the break. It changes
+again when your break is over. Then you just resume typing. Xwrits hides
+itself until you should take another break.
+.PP
+The \fBtypetime\fP option changes the amount of time between breaks, and
+the \fBbreaktime\fP option changes the length of a break. The defaults are
+55 minutes and 5 minutes, respectively.
+.PP
+Xwrits's graphics are brightly colored pictures of a wrist and hand. The
+hand clenches and spreads ``as if in pain'' on the warning window, slumps
+relaxed during the break, and points forward valiantly when the break is
+over. It is trapped behind bars while the keyboard is locked. Other
+gestures are included (see the \fB+finger\fP option). You can also use your
+own pictures: see the \fBwarning-picture\fP, \fBrest-picture\fP, and
+\fBready-picture\fP options.
+.PP
+Normally, xwrits works through annoyance\*Eit flashes until you stop
+typing. However, an option makes it actively prevent you from typing by
+locking the screen. See \fB+lock\fP below.
+.PP
+Xwrits notices when you leave your workstation idle, and treats a long idle
+period as if you took a break. You can turn this off with the \fB-idle\fP
+option. With the \fB+mouse\fP option, it will also monitor your mouse
+movements\*Eyou won't be able to move the mouse during a break without
+aborting the break.
+.PP
+Each wrist break normally lasts the same amount of time. This is what
+doctors suggest, but, if you'd like, the \fB+quota\fP option will reward
+you for taking small breaks by reducing the length of the next official
+break.
+.PP
+Some doctors recommend taking a short ``microbreak'' every five minutes, as
+well as a longer break every hour. To use xwrits this way, just run two
+xwrits processes, one for the microbreaks and one for the longer breaks.
+'
+.SH ESCALATION
+It is easy to put the warning window aside ``for 5 minutes'' and ignore it
+for fifty. The \fBafter\fP=\fIdelay\fP option causes xwrits to escalate its
+activity over time, making it harder to ignore.
+.PP
+Options following \fBafter\fP come into effect after you have ignored the
+warning window for \fIdelay\fP. In other words, xwrits's behavior escalates
+after \fIdelay\fP. For instance, with this command line,
+.nf
+	xwrits flashtime=:2 after=10 flashtime=:.03
+.fi
+the warning window will begin flashing very quickly if it is ignored
+for 10 minutes.
+.PP
+Any options preceding an \fBafter\fP option also apply following it, unless
+you explicitly cancel them. For example:
+.nf
+	xwrits +finger after=10 -finger
+.fi
+.PP
+Multiple \fBafter\fP options create a series of escalations. \fIDelay\fP
+arguments are cumulative, so ``after=10 after=10'' means the same as
+``after=20''.
+.PP
+One interesting use for \fBafter\fP is to make a break's length depend on
+how long you waited to take it. For example:
+.nf
+	xwrits break=5 after=10 break=7
+.fi
+Here, a wrist break normally takes 5 minutes. However, if you ignore the
+warning window for 10 minutes or more before taking a break, the wrist
+break will last 7 minutes.
+'
+.SH OPTIONS
+All options may be abbreviated to their unique prefixes. Some may be
+abbreviated further, in which case the smallest legal abbreviation is shown
+in brackets. Options are processed from left to right.
+.PP
+Options listed as ``\fB+option\fP (\fB\-option\fP)'' are toggles, which can
+be on or off. A + turns the option on; \- turns it off. Off is the default
+for most toggle options, and only the on behavior is described. You can
+leave off the + sign if you like: ``xwrits +finger'' and ``xwrits finger''
+are equivalent. Or you can say ``\-no\-finger'' instead of ``\-finger''.
+.PP
+Many options take arguments. You can give these after an equal sign, as in
+``xwrits breaktime=2''. Non-optional arguments can also be given
+separately, as in ``xwrits breaktime 2''.
+.PP
+Time arguments are expressed in minutes. For example, ``2'' is 2 minutes,
+``2.5'' is 2 minutes 30 seconds. Use a colon to specify seconds: ``2:05.4''
+is 2 minutes 5.4 seconds, and ``:5'' is 5 seconds.
+
+.TP 5
+\fB\-display\fP \fIdisplay\fP
+'
+Specify the X display. Xwrits monitors this display for keystrokes and
+mouse movements, and displays windows on it. You can simultaneously monitor
+more than one display by giving this option multiple times; for example,
+``xwrits display :0.0 display fun-orgy:0.0''.
+'
+.TP 5
+\fB+multiscreen\fP (\fB\-multiscreen\fP)
+'
+When this option is on, xwrits will open every available screen on each
+specified
+.IR display .
+Useful for multihead displays.
+'
+.TP 5
+\fBtypetime\fP=\fItime\fP [\fBt\fP]
+Allow typing for \fItime\fP between breaks. Default is 55 minutes.
+'
+.TP 5
+\fBbreaktime\fP=\fItime\fP [\fBb\fP]
+The amount of time a break lasts. Default is 5 minutes. This option can be
+supplied multiple times; see 
+.SB ESCALATION
+above.
+'
+.TP 5
+\fBafter\fP=\fIdelay-time\fP
+See
+.SB ESCALATION
+above.
+'
+.TP 5
+\fBbars-picture\fP=\fIfile\fP [\fBbp\fP=\fIfile\fP]
+Sets the background GIF image that appears while the screen is locked. By
+default, this is an image of bars designed to work with the usual
+\fBlock-picture\fP. If you specify your own \fBlock-picture\fP, however,
+\fBbars-picture\fP defaults to a black screen. (Say
+``bars-picture="&bars"'' to keep the bars.) Animations are not acceptable.
+'
+.TP 5
+\fB+beep\fP (\fB\-beep\fP)
+Xwrits will beep when the break should begin and again when it is
+over.
+'
+.TP 5
+\fB+breakclock\fP (\fB\-breakclock\fP) [\fBbc\fP]
+A clock will appear in the resting window showing how many minutes
+remain in the wrist break.
+'
+.TP 5
+\fBcanceltime\fP=\fItime\fP [\fBct\fP]
+'
+Allow typing for \fItime\fP after a break is cancelled. You cancel a break
+by deleting all xwrits windows with your window manager. This time should
+probably be less than the regular type time. Default is 10 minutes.
+'
+.TP 5
+\fB+cheat\fP[=\fInum\fP] (\fB\-cheat\fP)
+Allows you to cheat during a break. You can type \fInum\fP keystrokes
+before xwrits cancels the break. Default for \fInum\fP is 5. (If you're
+using \fB+mouse\fP, mouse movements also count as keystrokes.)
+'
+.TP 5
+\fB+clock\fP (\fB\-clock\fP) [\fBc\fP]
+A clock will appear in the warning window showing how many minutes
+you've put off the wrist break.
+'
+.TP 5
+\fB+finger\fP (\fB\-finger\fP) [\fBf\fP]
+The warning window will be rude to you.
+'
+.TP 5
+\fB+finger\fP=\fIculture\fP
+The warning window will be rude to you, according to \fIculture\fP's idea
+of rudeness. Possible values for \fIculture\fP are `american' (the default),
+`korean' (synonyms `japanese' and `russian'), `german', or the name of any
+GIF image file.
+'
+.TP 5
+\fBflashtime\fP=\fItime\fP
+The amount of time between flashes of the warning window. Default is 2
+seconds.
+'
+.TP 5
+\fB+flipoff\fP (\fB\-flipoff\fP)
+Synonym for \fB+finger\fP.
+'
+.TP 5
+\fB+iconified\fP (\fB\-iconified\fP)
+The warning window will initially appear as an icon.
+'
+.TP 5
+\fB+idle\fP[=\fIidletime\fP] (\fB\-idle\fP) [\fBi\fP]
+If you leave your workstation idle for \fIidletime\fP or longer, xwrits
+will behave as if you took a break. The default for \fIidletime\fP is the
+break length (see \fBbreaktime\fP above). \fBidle\fP is on by default.
+'
+.TP 5
+\fB+lock\fP[=\fIjump-time\fP] (\fB\-lock\fP)
+Xwrits will lock your screen until your break is
+over. You can prematurely disable the lock and get a normal warning
+window by typing your password (see \fBpassword\fP below). The
+\fIjump-time\fP argument specifies how fast the screensaver will move;
+default is 4 seconds. If the keyboard has been grabbed by another
+application when the lock is attempted, the lock fails and a
+normal warning window appears instead.
+'
+.TP 5
+\fBlock-picture\fP=\fIfile\fP [\fBlp\fP=\fIfile\fP]
+Sets the GIF image that appears while the screen is locked.
+Animations are acceptable. See also \fBbars-picture\fP.
+'
+.TP 5
+\fBmaxhands\fP=\fInum\fP
+No more than \fInum\fP warning windows will appear on your screen
+simultaneously. Normally, there will be only one warning window, but
+see \fB+multiply\fP below. \fINum\fP cannot be less than 1, or more
+than 137. Default is 25.
+'
+.TP 5
+\fBminbreaktime\fP=\fItime\fP
+Sets the minimum break length to \fItime\fP. This option is meaningful
+when \fB+quota\fP is on (see below); no matter how many short breaks you
+take, the break length will not be shortened below \fItime\fP. It defaults
+to half the break time or the quota time, whichever is larger.
+'
+.TP 5
+\fBmono\fP (\fB\-mono\fP)
+Xwrits will display its graphics in black and white. This may be useful if
+you live in a world with a limited colormap.
+'
+.TP 5
+\fB+mouse\fP[=\fIsensitivity\fP] (\fB\-mouse\fP)
+Xwrits will monitor your mouse movements. Every couple seconds, it checks
+whether the mouse has moved. Movements of more than \fIsensitivity\fP
+pixels in any direction are treated like key presses. Default for
+\fIsensitivity\fP is 15 pixels.
+'
+.TP 5
+\fB+multiply\fP[=\fIbreed-time\fP] (\fB\-multiply\fP) [\fBm\fP]
+A new warning window will be created every \fIbreed-time\fP. Default for
+\fIbreed-time\fP is 2.3 seconds.
+'
+.TP 5
+\fB+noiconify\fP (\fB\-noiconify\fP)
+The warning window will not allow itself to be iconified.
+'
+.TP 5
+\fB+once\fP[=\fIcount\fP]
+Put up the warning window once, or (with \fIcount\fP) \fIcount\fP times, then 
+exit.
+'
+.TP 5
+\fBpassword\fP=\fIpassword\fP
+The password you type to unlock a locked screen (see \fB+lock\fP above).
+Xwrits does not protect this password from intruders.
+Therefore, do not use your login password or any other password you must
+keep secure. Default is ``quit''.
+'
+.TP 5
+\fB+quota\fP[=\fItime\fP] (\fB\-quota\fP)
+If you leave your workstation idle for more than \fItime\fP, the idle time
+is deducted from the length of your next break. This option turns the break
+length into a break quota\*Einstead of resting for \fIbreaktime\fP
+consecutive minutes every \fItypetime\fP, you must rest for a total of
+\fIbreaktime\fP minutes per \fItypetime\fP. Default for \fItime\fP is 1
+minute. See also \fBminbreaktime\fP.
+'
+.TP 5
+\fBready-picture\fP=\fIfile\fP [\fBokp\fP=\fIfile\fP]
+Sets the image that appears when your break is over to an arbitrary GIF.
+Animations are acceptable.
+'
+.TP 5
+\fBrest-picture\fP=\fIfile\fP [\fBrp\fP=\fIfile\fP]
+Sets the image that appears during your break to an arbitrary GIF.
+Animations are acceptable.
+'
+.TP 5
+\fBtitle\fP=\fItext\fP
+Xwrits windows will have \fItext\fP for their title, instead of the default
+``xwrits''.
+'
+.TP 5
+\fB+top\fP (\fB\-top\fP)
+The warning window will try to keep itself above all other windows on the
+desktop. (Note: it can be fooled into staying only partially visible.)
+'
+.TP 5
+\fB+verbose\fP (\fB\-verbose\fP)
+Xwrits will print a lot of information about the windows on which it is
+listening for keystrokes. This is mostly useful for debugging.
+'
+.TP 5
+\fBversion\fP
+Prints the version number and some quickie warranty information and exits.
+'
+.TP 5
+\fBwarning-picture\fP=\fIfile\fP [\fBwp\fP=\fIfile\fP]
+Sets the image that appears on the warning window to an arbitrary GIF.
+Animations are acceptable.
+'
+.SH EXAMPLES
+Here is the way I run xwrits:
+.nf
+	xwrits typetime=40 finger after 15 clock multiply=5:1.4
+.fi
+This looks pretty spectacular:
+.nf
+	xwrits t=0 b=:2 f fla=:.5 m=:.31 max=100 -i
+.fi
+Whee!!
+'
+.SH AUTHOR
+Eddie Kohler, kohler@cs.ucla.edu
+.br
+http://www.cs.ucla.edu/~kohler/
+.PP
+http://www.lcdf.org/xwrits/
+.br
+The \fBxwrits\fP home page (for distributions and so forth).
+.PP
+Idea for idle processing code from
+.BR xautolock (1)
+by Stefan De Troch and Michel Eyckmans
+'
+.SH BUGS
+Xwrits does not use the X resource database at all.
+.PP
+More options might be nice. So might more careful screen locking and
+password protection. I would like to include rude finger gestures from
+other cultures (see the GESTURES file in the distribution for gestures I
+know about so far).
+.PP
+Please send any bugs, comments, or suggestions to me.
+.PP
+Yes the misspelling is intentional.
+.PP
+Yes it's my left wrist.
