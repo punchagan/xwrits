@@ -307,6 +307,16 @@ Prints the version number and some quickie warranty information and exits.
 Sets the image that appears on the warning window to an arbitrary GIF.
 Animations are acceptable.
 '
+.TP 5
+\fBbefore-lock\fP=\fIfile.sh\fP
+Executes this sh script before locking the screen. User running xwrits should
+have execution flag on this file.
+'
+.TP 5
+\fBafter-lock\fP=\fIfile.sh\fP
+Executes this sh script after unlocking the screen. User running xwrits should
+have execution flag on this file.
+'
 .SH EXAMPLES
 Here is the way I run xwrits:
 .nf

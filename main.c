@@ -10,6 +10,7 @@
 #ifdef HAVE_XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif
+#include <signal.h>
 
 static Options onormal;
 Options *ocurrent;
@@ -62,6 +63,9 @@ int verbose;
 
 static int force_mono = 0;
 static int multiscreen = 0;
+
+static const char *before_lock_command = 0;
+static const char *after_lock_command = 0;
 
 
 static void
@@ -757,6 +761,10 @@ particular purpose.\n");
       ;
     else if (optparse(s, "wp", 2, "ss", &o->slideshow_text))
       ;
+    else if (optparse(s, "before-lock", 1, "ss", &before_lock_command))
+      ;
+    else if (optparse(s, "after-lock", 1, "ss", &after_lock_command))
+      ;
 
     else
       short_usage();
@@ -1089,6 +1097,30 @@ initialize_port(int portno)
 }
 
 
+void fork_and_run(const char* const cmd)
+{
+	pid_t pid;
+	pid = fork();
+	if (pid == 0) {
+		execl("/bin/sh", "/bin/sh", "-c", cmd, NULL);
+		_exit(0);
+	}
+}
+
+void on_before_lock()
+{
+	if (before_lock_command) {
+		fork_and_run(before_lock_command);
+	}
+}
+void on_after_lock()
+{
+	if (after_lock_command) {
+		fork_and_run(after_lock_command);
+	}
+}
+
+
 /* main! */
 
 typedef enum {
@@ -1159,7 +1191,9 @@ main_loop(void)
 
 	  case ST_LOCK:
 	    was_lock = 1;
+		on_before_lock();
 	    tran = lock();
+		on_after_lock();
 	    assert(tran == TRAN_AWAKE || tran == TRAN_FAIL);
 	    if (tran == TRAN_AWAKE)
 		s = ST_AWAKE;
@@ -1197,6 +1231,8 @@ main(int argc, char *argv[])
   /* parse options. remove first argument = program name */
   default_settings();
   parse_options(argc - 1, argv + 1);
+
+  signal(SIGCLD, SIG_IGN);
 
   /* At this point, all ports have 'display_name' valid and everything else
      invalid. Open displays, check multiscreen */
